@@ -1,43 +1,23 @@
-package main
+package app
 
 import (
-	"codeberg.org/lauralani/go-urlsh/internal/api"
+	"codeberg.org/lauralani/go-urlsh/internal/app"
+	"codeberg.org/lauralani/go-urlsh/models"
+	"database/sql"
 	"fmt"
-	"log"
 	"os"
-	"strings"
 )
 
-func main() {
-	var bindaddr string
-	var trustedproxies []string
-	if os.Getenv("PORT") != "" {
-		bindaddr = ":" + os.Getenv("PORT")
-	} else {
-		bindaddr = ":2345"
+func Run() error {
+	var dberr error
+	models.DB, dberr = sql.Open("pgx", os.Getenv("DATABASE_URL"))
+	if dberr != nil {
+		return fmt.Errorf("couldn't connect to database: %v", dberr.Error())
 	}
 
-	if os.Getenv("BINDADDR") != "" {
-		bindaddr = os.Getenv("BINDADDR") + bindaddr
-	} else {
-		bindaddr = "127.0.0.1" + bindaddr
-	}
-
-	if os.Getenv("TRUSTEDPROXIES") != "" {
-		trustedproxies = strings.Split(os.Getenv("TRUSTEDPROXIES"), ",")
-	} else {
-		trustedproxies = []string{"127.0.0.1", "::1"}
-	}
-
-	r := api.SetupRouter()
-
-	proxyerr := r.SetTrustedProxies(trustedproxies)
-	if proxyerr != nil {
-		panic(fmt.Errorf("value for TRUSTEDPROXIES env variable is not valid: %q", proxyerr))
-	}
-
-	err := r.Run(bindaddr)
+	err := app.SetupFiber()
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("couldn't start webserver: %v", err.Error())
 	}
+	return nil
 }
