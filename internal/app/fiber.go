@@ -1,6 +1,7 @@
 package app
 
 import (
+	"codeberg.org/lauralani/go-urlsh/internal/api"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -34,7 +35,6 @@ func SetupFiber() error {
 
 	fiberapp := fiber.New(fiber.Config{
 		AppName:      "go-urlsh",
-		GETOnly:      true,
 		ProxyHeader:  proxyheader,
 		Prefork:      prod,
 		ErrorHandler: HandleError,
@@ -50,9 +50,15 @@ func SetupFiber() error {
 	v1 := fiberapp.Group("/api/v1")
 	v1.Use(cors.New(cors.Config{AllowOrigins: "*"}))
 
-	//v1.Get("/films", api.HandleFilmAll)
-	//v1.Get("/films/random", api.HandleFilmRandom)
-	//v1.Get("/films/:id", api.HandleFilmSingle)
+	v1.Get("/links", api.HandleLinkGetAll)
+	v1.Get("/links/:id", api.HandleLinkGet)
+	v1.Put("/links/:id", api.HandleLinkPut)
+	v1.Post("/links", api.HandleLinkPost)
+	v1.Delete("/links/:id", api.HandleLinkDelete)
+
+	v1.Get("/apikeys", api.HandleApiKeysGetAll)
+	v1.Post("/apikeys", api.HandleApiKeysPost)
+	v1.Delete("/apikeys/:id<guid>", api.HandleApiKeysPost)
 
 	listenerr := fiberapp.Listen(ip + ":" + port)
 	if listenerr != nil {

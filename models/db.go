@@ -1,5 +1,7 @@
 package models
 
-import "database/sql"
+import (
+	"github.com/uptrace/bun"
+)
 
-var DB *sql.DB
+var DB *bun.DB
