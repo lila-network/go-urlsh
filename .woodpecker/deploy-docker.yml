@@ -1,0 +1,16 @@
+when:
+  event:
+    - push
+
+pipeline:
+  docker-deploy-push:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      dockerfile: Dockerfile
+      platforms: linux/arm/v7,linux/arm64/v8,linux/amd64,linux/ppc64le
+      repo: codeberg.org/lauralani/go-urlsh
+      registry: codeberg.org
+      tags: latest
+      username: lauralani
+      password:
+        from_secret: codeberg_token
