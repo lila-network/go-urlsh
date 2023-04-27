@@ -2,11 +2,12 @@ package web
 
 import (
 	"codeberg.org/lauralani/go-urlsh/internal/db"
+	"codeberg.org/lauralani/go-urlsh/internal/misc"
 	"github.com/gofiber/fiber/v2"
 )
 
 func HandleAdminRootGet(c *fiber.Ctx) error {
-	cookie := c.Cookies("gourlsh_auth")
+	cookie := c.Cookies(misc.CookieName)
 	if cookie == "" {
 		c.Location("/admin/login")
 		c.Status(fiber.StatusSeeOther)
@@ -20,7 +21,7 @@ func HandleAdminRootGet(c *fiber.Ctx) error {
 			"Plat":  "almost",
 		})
 	} else {
-		c.ClearCookie("gourlsh_auth")
+		c.ClearCookie(misc.CookieName)
 		c.Location("/admin/login")
 		c.Status(fiber.StatusSeeOther)
 		return nil

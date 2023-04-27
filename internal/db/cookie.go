@@ -10,6 +10,10 @@ import (
 //
 // Returns true if it's valid, false if not.
 func IsCookieValid(val string) bool {
+	if val == "" {
+		return false
+	}
+
 	count, err := models.DB.NewSelect().Model((*models.Login)(nil)).Where("cookie = ?", val).Count(context.Background())
 	if err != nil {
 		log.Printf("Error checking cookie validity for cookie %v\n", val)

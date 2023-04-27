@@ -1,6 +1,7 @@
 package web
 
 import (
+	"codeberg.org/lauralani/go-urlsh/internal/misc"
 	"codeberg.org/lauralani/go-urlsh/models"
 	"context"
 	"crypto/sha256"
@@ -33,27 +34,27 @@ func HandleAdminLoginPost(c *fiber.Ctx) error {
 
 		expires := time.Now().Add(30 * 24 * time.Hour)
 		key := uuid.New().String()
-		login := new(models.Login)
+		dblogin := new(models.Login)
 
 		cookie := new(fiber.Cookie)
-		cookie.Name = "gourlsh_auth"
+		cookie.Name = misc.CookieName
 		cookie.Value = key
 		cookie.Expires = expires
 
-		login.Expires = expires
-		login.Cookie = key
-		login.UserName = user.UserName
+		dblogin.Expires = expires
+		dblogin.Cookie = key
+		dblogin.UserName = user.UserName
 
-		_, err = models.DB.NewInsert().Model(login).Exec(context.Background())
+		_, err = models.DB.NewInsert().Model(dblogin).Exec(context.Background())
 		if err != nil {
-			log.Printf("DB Error inserting login cookie information for user %v: %v\n", login.UserName, err.Error())
+			log.Printf("DB Error inserting login cookie information for user %v: %v\n", dblogin.UserName, err.Error())
 			return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
 		}
 
 		user.LastLogin = time.Now()
 		_, err = models.DB.NewUpdate().Model(&user).WherePK().Exec(context.Background())
 		if err != nil {
-			log.Printf("DB Error updating last login information for user %v: %v\n", login.UserName, err.Error())
+			log.Printf("DB Error updating last login information for user %v: %v\n", dblogin.UserName, err.Error())
 			return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
 		}
 		c.Cookie(cookie)

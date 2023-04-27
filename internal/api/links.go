@@ -1,6 +1,7 @@
 package api
 
 import (
+	"codeberg.org/lauralani/go-urlsh/internal/db"
 	"codeberg.org/lauralani/go-urlsh/internal/misc"
 	"codeberg.org/lauralani/go-urlsh/models"
 	"context"
@@ -31,7 +32,11 @@ func HandleLinkGet(c *fiber.Ctx) error {
 }
 
 func HandleLinkPost(c *fiber.Ctx) error {
-	// TODO: Add Auth
+	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
+		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
+	}
+
+	// TODO: Add API-Key Auth
 	var newlink models.Link
 
 	err := json.Unmarshal(c.Body(), &newlink)
@@ -55,7 +60,7 @@ func HandleLinkPost(c *fiber.Ctx) error {
 	}
 
 	c.Append("Location", c.BaseURL()+"/api/v1/links/"+newlink.ID)
-	c.Status(200)
+	c.Status(fiber.StatusCreated)
 	c.JSON(newlink)
 
 	return nil

@@ -54,6 +54,8 @@ func SetupFiber() error {
 	fiberapp.Get("/admin/login", web.HandleAdminLoginGet)
 	fiberapp.Post("/admin/login", web.HandleAdminLoginPost)
 
+	fiberapp.Get("/admin/link/add", web.HandleAdminLinkAddGet)
+
 	fiberapp.Static("/admin/", "./web")
 
 	v1 := fiberapp.Group("/api/v1")

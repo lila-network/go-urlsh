@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Add new Shortlink - go-urlsh</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="stylesheet" href="/admin/simple.min.css">
+
+</head>
+<body>
+<form action="javascript:void(0);" style="margin-top: 2em">
+  <fieldset id="form_fields">
+    <legend>Add a new Shortlink</legend>
+    <p>* shows a required field</p>
+    <label for="linkname">Shortlink Name (leave empty for random)</label>
+    <input type="text" name="linkname" id="linkname" placeholder="shortlink">
+
+    <label for="link">Link *</label>
+    <input type="text" name="link" id="link" placeholder="https://" style="width: 100%" onchange="HandleChange()">
+
+    <label for="description">Description</label>
+    <input type="text" name="description" id="description" placeholder="" style="width: 100%">
+
+    <input type="submit" id="submit" value="Login" onclick="HandleSubmit()">
+  </fieldset>
+
+  <dialog id="dialog-info">
+    <h2 id="dialog-heading"></h2>
+    <p id="dialog-text"></p>
+    <form method="dialog">
+      <button>Close</button>
+    </form>
+  </dialog>
+
+</form>
+
+
+<footer>
+  <p>go-urlsh - <a href="/">Home</a> -
+    <a href="https://codeberg.org/lauralani/go-urlsh" target="_blank">Source Code</a> -
+    <a href="https://codeberg.org/lauralani/go-urlsh/src/branch/main/LICENSE" target="_blank">License</a>
+  </p>
+</footer>
+
+<script src="/admin/links.js"></script>
+
+</body>
+</html>
