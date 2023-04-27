@@ -23,6 +23,7 @@ FROM scratch AS prod
 WORKDIR /var/app
 COPY --from=build /var/app/go-urlsh /var/app/
 COPY --from=build /var/app/web /var/app/web
+COPY --from=build /var/app/views /var/app/views
 
 EXPOSE 80
 ENTRYPOINT ["/var/app/go-urlsh"]
