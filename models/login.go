@@ -7,9 +7,8 @@ import (
 
 type Login struct {
 	bun.BaseModel `bun:"table:logins"`
-	ID            int       `bun:"id,pk,autoincrement"`
+	Cookie        string    `bun:"cookie,pk,type:uuid"`
 	UserName      string    `bun:"username,notnull"`
-	Cookie        string    `bun:"cookie,notnull"`
 	Expires       time.Time `bun:"expires,notnull"`
 }
 

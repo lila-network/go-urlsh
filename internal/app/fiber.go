@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/template/html"
 	"os"
 )
 
@@ -17,6 +18,8 @@ func SetupFiber() error {
 	var port = "3000"
 	var ip = ""
 	var proxyheader = "X-Forwarded-For"
+
+	var template_engine = html.New("./views", ".tmpl")
 
 	if os.Getenv("PROD") == "true" {
 		prod = true
@@ -39,6 +42,7 @@ func SetupFiber() error {
 		ProxyHeader:  proxyheader,
 		Prefork:      prod,
 		ErrorHandler: HandleError,
+		Views:        template_engine,
 	})
 
 	fiberapp.Use(logger.New(logger.Config{Format: "[${ip}]:${port} ${status} ${method} ${path}\n"}))
@@ -46,9 +50,11 @@ func SetupFiber() error {
 	fiberapp.Use(compress.New())
 	fiberapp.Use(recover.New())
 
-	fiberapp.Static("/admin/", "./web")
+	fiberapp.Get("/admin/", web.HandleAdminRootGet)
+	fiberapp.Get("/admin/login", web.HandleAdminLoginGet)
+	fiberapp.Post("/admin/login", web.HandleAdminLoginPost)
 
-	fiberapp.Post("/admin/login", web.HandleLogin)
+	fiberapp.Static("/admin/", "./web")
 
 	v1 := fiberapp.Group("/api/v1")
 	v1.Use(cors.New(cors.Config{AllowOrigins: "*"}))

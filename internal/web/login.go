@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func HandleLogin(c *fiber.Ctx) error {
+func HandleAdminLoginPost(c *fiber.Ctx) error {
 	var login models.LoginRequest
 	var user models.User
 
@@ -64,4 +64,8 @@ func HandleLogin(c *fiber.Ctx) error {
 		log.Printf("Error authenticating User %v: password mismatch by IP %v\n", login.Username, c.IP())
 		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
 	}
+}
+
+func HandleAdminLoginGet(c *fiber.Ctx) error {
+	return c.Render("login", nil)
 }
