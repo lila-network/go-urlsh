@@ -2,6 +2,7 @@ package app
 
 import (
 	"codeberg.org/lauralani/go-urlsh/internal/api"
+	"codeberg.org/lauralani/go-urlsh/internal/web"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -47,6 +48,8 @@ func SetupFiber() error {
 
 	fiberapp.Static("/admin/", "./web")
 
+	fiberapp.Post("/admin/login", web.HandleLogin)
+
 	v1 := fiberapp.Group("/api/v1")
 	v1.Use(cors.New(cors.Config{AllowOrigins: "*"}))
 
@@ -59,6 +62,8 @@ func SetupFiber() error {
 	v1.Get("/apikeys", api.HandleApiKeysGetAll)
 	v1.Post("/apikeys", api.HandleApiKeysPost)
 	v1.Delete("/apikeys/:id<guid>", api.HandleApiKeysPost)
+
+	v1.Post("/users", api.HandleUserPost)
 
 	listenerr := fiberapp.Listen(ip + ":" + port)
 	if listenerr != nil {
