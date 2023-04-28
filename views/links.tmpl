@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<a href="/admin/links/new"><button type="button" id="add-new-button">Add new Shortlink</button></a>
+
 <table>
   <thead>
   <tr>
@@ -24,8 +26,8 @@
   <tbody>
     {{range .}}
     <tr>
-      <td>{{.ID}}</td>
-      <td>{{.URL}}</td>
+      <td><a href="#" onclick="HandleCopy('{{.ID}}')">{{.ID}}</a></td>
+      <td><a href="{{.URL}}" target="_blank">{{.URL}}</a></td>
       <td style="text-align: right;">
         <button type="button" id="edit-button" onclick="HandleEdit('{{.ID}}')">
           Edit
@@ -43,13 +45,13 @@
 
 
 <footer>
-  <p>go-urlsh - <a href="/">Home</a> -
+  <p>go-urlsh - <a href="/admin/">Home</a> -
     <a href="https://codeberg.org/lauralani/go-urlsh" target="_blank">Source Code</a> -
     <a href="https://codeberg.org/lauralani/go-urlsh/src/branch/main/LICENSE" target="_blank">License</a>
   </p>
 </footer>
 
-<script src="/admin/link_add.js"></script>
+<script src="/admin/links.js"></script>
 
 </body>
 </html>

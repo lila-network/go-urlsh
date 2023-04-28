@@ -57,7 +57,7 @@ func SetupFiber() error {
 	fiberapp.Post("/admin/login", web.HandleAdminLoginPost)
 
 	fiberapp.Get("/admin/", web.HandleAdminLinkIndexGet)
-	fiberapp.Get("/admin/links/add", web.HandleAdminLinkAddGet)
+	fiberapp.Get("/admin/links/new", web.HandleAdminLinkNewGet)
 
 	fiberapp.Static("/admin/", "./web")
 

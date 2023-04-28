@@ -22,8 +22,8 @@
   <tbody>
     {{range .}}
     <tr>
-      <td>{{.ID}}</td>
-      <td>{{.URL}}</td>
+      <td><a onclick="HandleCopy('{{.id}}')">{{.ID}}</a></td>
+      <td><a href="{{.URL}}" target="_blank">{{.URL}}</a></td>
 
       <td>
         <button type="button" id="edit-button" onclick="HandleEdit('{{.ID}}')">
