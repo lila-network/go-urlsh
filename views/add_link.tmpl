@@ -5,7 +5,7 @@
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>Add new Shortlink - go-urlsh</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel="stylesheet" href="/admin/simple.min.css">
+  <link rel="stylesheet" href="/admin/style.css">
 
 </head>
 <body>
@@ -17,12 +17,16 @@
     <input type="text" name="linkname" id="linkname" placeholder="shortlink">
 
     <label for="link">Link *</label>
-    <input type="text" name="link" id="link" placeholder="https://" style="width: 100%" onchange="HandleChange()">
+    <input type="text" name="link" id="link" placeholder="https://" style="width: 97%" onchange="HandleChange()">
 
     <label for="description">Description</label>
-    <input type="text" name="description" id="description" placeholder="" style="width: 100%">
+    <input type="text" name="description" id="description" placeholder="" style="width: 97%">
 
-    <input type="submit" id="submit" value="Login" onclick="HandleSubmit()">
+    <div>
+
+    <input type="submit" id="submit" value="Add" onclick="HandleSubmit()" style="margin-top: 1em;">
+
+    </div>
   </fieldset>
 
   <dialog id="dialog-info">
@@ -43,7 +47,7 @@
   </p>
 </footer>
 
-<script src="/admin/links.js"></script>
+<script src="/admin/link_add.js"></script>
 
 </body>
 </html>

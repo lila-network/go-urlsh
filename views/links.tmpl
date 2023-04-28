@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Shortlinks - go-urlsh</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="stylesheet" href="/admin/style.css">
+  <style>
+    td { vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+<table>
+  <thead>
+  <tr>
+    <th>Shortlink</th>
+    <th>URL</th>
+    <th> </th>
+    <th> </th>
+  </tr>
+  </thead>
+  <tbody>
+    {{range .}}
+    <tr>
+      <td>{{.ID}}</td>
+      <td>{{.URL}}</td>
+      <td style="text-align: right;">
+        <button type="button" id="edit-button" onclick="HandleEdit('{{.ID}}')">
+          Edit
+        </button>
+      </td>
+      <td style="text-align: right;">
+        <button type="button" id="delete-button" onclick="HandleDelete('{{.ID}}')">
+          Delete
+        </button>
+      </td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+
+
+<footer>
+  <p>go-urlsh - <a href="/">Home</a> -
+    <a href="https://codeberg.org/lauralani/go-urlsh" target="_blank">Source Code</a> -
+    <a href="https://codeberg.org/lauralani/go-urlsh/src/branch/main/LICENSE" target="_blank">License</a>
+  </p>
+</footer>
+
+<script src="/admin/link_add.js"></script>
+
+</body>
+</html>

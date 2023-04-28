@@ -38,11 +38,12 @@ func SetupFiber() error {
 	}
 
 	fiberapp := fiber.New(fiber.Config{
-		AppName:      "go-urlsh",
-		ProxyHeader:  proxyheader,
-		Prefork:      prod,
-		ErrorHandler: HandleError,
-		Views:        template_engine,
+		AppName:              "go-urlsh",
+		ProxyHeader:          proxyheader,
+		Prefork:              prod,
+		ErrorHandler:         HandleError,
+		Views:                template_engine,
+		CompressedFileSuffix: ".gz",
 	})
 
 	fiberapp.Use(logger.New(logger.Config{Format: "[${ip}]:${port} ${status} ${method} ${path}\n"}))
@@ -50,13 +51,18 @@ func SetupFiber() error {
 	fiberapp.Use(compress.New())
 	fiberapp.Use(recover.New())
 
-	fiberapp.Get("/admin/", web.HandleAdminRootGet)
+	fiberapp.Get("/admin/", web.HandleAdminLinkIndexGet)
+
 	fiberapp.Get("/admin/login", web.HandleAdminLoginGet)
 	fiberapp.Post("/admin/login", web.HandleAdminLoginPost)
 
-	fiberapp.Get("/admin/link/add", web.HandleAdminLinkAddGet)
+	fiberapp.Get("/admin/", web.HandleAdminLinkIndexGet)
+	fiberapp.Get("/admin/links/add", web.HandleAdminLinkAddGet)
 
 	fiberapp.Static("/admin/", "./web")
+
+	fiberapp.Get("/", web.HandleRootGet)
+	fiberapp.Get("/:id", web.HandleRootGet)
 
 	v1 := fiberapp.Group("/api/v1")
 	v1.Use(cors.New(cors.Config{AllowOrigins: "*"}))
