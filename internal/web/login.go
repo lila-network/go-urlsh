@@ -1,6 +1,7 @@
 package web
 
 import (
+	"codeberg.org/lauralani/go-urlsh/internal/db"
 	"codeberg.org/lauralani/go-urlsh/internal/misc"
 	"codeberg.org/lauralani/go-urlsh/models"
 	"context"
@@ -31,8 +32,14 @@ func HandleAdminLoginPost(c *fiber.Ctx) error {
 
 	if passwordsum == user.PasswordHash {
 		// Passwords match
+		var expires time.Time
 
-		expires := time.Now().Add(30 * 24 * time.Hour)
+		if login.Remember == "on" {
+			expires = time.Now().Add(30 * 24 * time.Hour)
+		} else {
+			expires = time.Now().Add(24 * time.Hour)
+		}
+
 		key := uuid.New().String()
 		dblogin := new(models.Login)
 
@@ -68,5 +75,11 @@ func HandleAdminLoginPost(c *fiber.Ctx) error {
 }
 
 func HandleAdminLoginGet(c *fiber.Ctx) error {
-	return c.Render("login", nil)
+	if db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
+		c.Location("/admin/")
+		c.Status(fiber.StatusSeeOther)
+		return nil
+	} else {
+		return c.Render("login", nil)
+	}
 }

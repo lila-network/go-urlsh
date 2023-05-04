@@ -1,49 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>Add new Shortlink - go-urlsh</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel="stylesheet" href="/admin/simple.min.css">
+  <link rel="stylesheet" href="/admin/pico.min.css">
+  <link rel="stylesheet" href="/admin/custom.css">
+  <script src="/admin/link_add.js" defer></script>
+  <script src="/admin/misc.js" defer></script>
 
 </head>
+
 <body>
-<form action="javascript:void(0);" style="margin-top: 2em">
-  <fieldset id="form_fields">
-    <legend>Add a new Shortlink</legend>
-    <p>* shows a required field</p>
-    <label for="linkname">Shortlink Name (leave empty for random)</label>
-    <input type="text" name="linkname" id="linkname" placeholder="shortlink">
+  <nav class="container-fluid">
+    <ul>
+      <li>
+        <a href="/admin/" class="contrast"><strong>go-urlsh</strong></a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="/admin/">Links</a>
+      </li>
+      <li>
+        <a href="/admin/apikeys/">API Keys</a>
+      </li>
+      <li>
+        <a href="javascript: void(0)" >Users (coming soon)</a>
+      </li>
+      <li>
+        <a href="javascript: Logout()" style="color: red;">Logout</a>
+      </li>
+    </ul>
+  </nav>
+  <main class="container" style="padding: 0">
+    <form action="javascript:HandleSubmit();" style="margin: 0">
+      <fieldset id="form_fields">
+        <hgroup>
+          <h1>Add new shortlink</h1>
+          <h2><i style="color: red;">*</i> marks required fields</h2>
+        </hgroup>
+        <label for="linkname">Shortlink Name (leave empty for random)</label>
+        <input type="text" name="linkname" id="linkname" placeholder="shortlink">
 
-    <label for="link">Link *</label>
-    <input type="text" name="link" id="link" placeholder="https://" style="width: 100%" onchange="HandleChange()">
+        <label for="link">Link <i style="color: red;">*</i></label>
+        <input type="text" name="link" id="link" placeholder="https://" onchange="HandleChange()">
 
-    <label for="description">Description</label>
-    <input type="text" name="description" id="description" placeholder="" style="width: 100%">
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description" placeholder="">
 
-    <input type="submit" id="submit" value="Login" onclick="HandleSubmit()" disabled>
-  </fieldset>
+        <div>
 
-  <dialog id="dialog-info">
-    <h2 id="dialog-heading"></h2>
-    <p id="dialog-text"></p>
-    <form method="dialog">
-      <button>Close</button>
+          <input type="submit" id="submit" value="Add" style="margin-top: 1em;">
+
+        </div>
+      </fieldset>
+
+      <dialog id="dialog-info">
+        <h2 id="dialog-heading"></h2>
+        <p id="dialog-text"></p>
+        <form method="dialog">
+          <button>Close</button>
+        </form>
+      </dialog>
+
     </form>
-  </dialog>
-
-</form>
-
-
-<footer>
-  <p>go-urlsh - <a href="/">Home</a> -
-    <a href="https://codeberg.org/lauralani/go-urlsh" target="_blank">Source Code</a> -
-    <a href="https://codeberg.org/lauralani/go-urlsh/src/branch/main/LICENSE" target="_blank">License</a>
-  </p>
-</footer>
-
-<script src="/admin/links.js"></script>
-
+  </main>
+  {{template "partials/footer" .}}
 </body>
+
 </html>

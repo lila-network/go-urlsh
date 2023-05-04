@@ -58,6 +58,7 @@ func SetupFiber() error {
 
 	fiberapp.Get("/admin/", web.HandleAdminLinkIndexGet)
 	fiberapp.Get("/admin/links/new", web.HandleAdminLinkNewGet)
+	fiberapp.Get("/admin/links/edit/:id", web.HandleAdminLinkEditGet)
 
 	fiberapp.Static("/admin/", "./web")
 
