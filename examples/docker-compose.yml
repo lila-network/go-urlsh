@@ -7,3 +7,16 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: go-urlsh
       POSTGRES_DB: go-urlsh
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+  go-urlsh:
+    image: codeberg.org/lauralani/go-urlsh:0.1
+    restart: always
+    ports:
+      - 127.0.0.1:3000:3000
+    depends_on:
+      - db
+    environment:
+      # format: postgresql://<username>:<password>@<database_ip>/<database>
+      DATABASE_URL: postgres://
+

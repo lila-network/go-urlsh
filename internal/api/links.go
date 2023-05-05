@@ -13,6 +13,10 @@ import (
 )
 
 func HandleLinkGetAll(c *fiber.Ctx) error {
+	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
+		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
+	}
+
 	var links []models.Link
 
 	err := models.DB.NewSelect().Model(&links).Scan(context.Background())
@@ -23,7 +27,10 @@ func HandleLinkGetAll(c *fiber.Ctx) error {
 	for _, link := range links {
 		log.Printf("id: %v, url: %v", link.ID, link.URL)
 	}
-	c.JSON(links)
+	err = c.JSON(links)
+	if err != nil {
+		log.Println(err)
+	}
 	return nil
 }
 
@@ -32,11 +39,10 @@ func HandleLinkGet(c *fiber.Ctx) error {
 }
 
 func HandleLinkPost(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
+	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
 		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
 	}
 
-	// TODO: Add API-Key Auth
 	var newlink models.Link
 
 	err := json.Unmarshal(c.Body(), &newlink)
@@ -61,7 +67,11 @@ func HandleLinkPost(c *fiber.Ctx) error {
 
 	c.Append("Location", c.BaseURL()+"/api/v1/links/"+newlink.ID)
 	c.Status(fiber.StatusCreated)
-	c.JSON(newlink)
+
+	err = c.JSON(newlink)
+	if err != nil {
+		log.Println(err)
+	}
 
 	return nil
 }
@@ -92,5 +102,12 @@ func HandleLinkDelete(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
 	}
+
+	c.Status(fiber.StatusNoContent)
+	err = c.SendString("204 No Content")
+	if err != nil {
+		log.Println(err)
+	}
+
 	return nil
 }

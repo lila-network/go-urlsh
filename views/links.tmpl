@@ -8,8 +8,7 @@
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel="stylesheet" href="/admin/pico.min.css">
   <link rel="stylesheet" href="/admin/custom.css">
-  <script src="/admin/links.js" defer></script>
-  <script src="/admin/misc.js" defer></script>
+  <script src="/admin/main.js" defer></script>
 
   <style>
     td {
@@ -20,58 +19,58 @@
 </head>
 
 <body>
-  <nav class="container-fluid">
-    <ul>
-      <li>
-        <a href="/admin/" class="contrast"><strong>go-urlsh</strong></a>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="/admin/links/new" style="color: greenyellow;">Add new Shortlink</a>
-      </li>
-      <li>
-        <a href="/admin/apikeys/">API Keys</a>
-      </li>
-      <li>
-        <a href="javascript: void(0)" >Users (coming soon)</a>
-      </li>
-      <li>
-        <a href="javascript: Logout()" style="color: red;">Logout</a>
-      </li>
-    </ul>
-  </nav>
-  <main class="container">
-    <table class="n-table">
-      <thead>
-        <tr>
-          <th>Shortlink</th>
-          <th>URL</th>
-          <th> </th>
-          <th> </th>
-        </tr>
-      </thead>
-      <tbody>
-        {{range .}}
-        <tr>
-          <td><a href="javascript: HandleCopy('{{.ID}}');" data-tooltip="click to copy">{{.ID}}</a></td>
-          <td><a href="{{.URL}}" target="_blank" {{if .Description}}data-tooltip="{{.Description}}"{{end}}>{{.URL}}</a></td>
-          <td style="text-align: right;">
-            <a href="/admin/links/edit/{{.ID}}">
-              Edit
-            </a>
-          </td>
-          <td style="text-align: right;">
-            <a href="javascript: HandleDelete('{{.ID}}');">
-              Delete
-            </a>
-          </td>
-        </tr>
-        {{end}}
-      </tbody>
-    </table>
-  </main>
-  {{template "partials/footer" .}}
+<nav class="container-fluid">
+  <ul>
+    <li>
+      <a href="/admin/" class="contrast"><strong>go-urlsh</strong></a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <a href="/admin/links/new" style="color: greenyellow;">Add new Shortlink</a>
+    </li>
+    <li>
+      <a href="/admin/apikeys/">API Keys</a>
+    </li>
+    <li>
+      <a href="javascript: void(0)" >Users (coming soon)</a>
+    </li>
+    <li>
+      <a href="javascript: Logout()" style="color: red;">Logout</a>
+    </li>
+  </ul>
+</nav>
+<main class="container">
+  <table class="n-table">
+    <thead>
+    <tr>
+      <th>Shortlink</th>
+      <th>URL</th>
+      <th> </th>
+      <th> </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .}}
+    <tr>
+      <td><a href="javascript: HandleLinkIndexCopy('{{.ID}}');" data-tooltip="click to copy">{{.ID}}</a></td>
+      <td><a href="{{.URL}}" target="_blank" {{if .Description}}data-tooltip="{{.Description}}"{{end}}>{{.URL}}</a></td>
+      <td style="text-align: right;">
+        <a href="/admin/links/edit/{{.ID}}">
+          Edit
+        </a>
+      </td>
+      <td style="text-align: right;">
+        <a href="javascript: HandleLinkIndexDelete('{{.ID}}');">
+          Delete
+        </a>
+      </td>
+    </tr>
+    {{end}}
+    </tbody>
+  </table>
+</main>
+{{template "partials/footer" .}}
 </body>
 
 </html>

@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"log"
 	"time"
@@ -34,7 +33,6 @@ func HandleUserPost(c *fiber.Ctx) error {
 		salt := misc.RandomString(15)
 		created := time.Now()
 		hashbytes := sha256.Sum256([]byte(salt + newuser.Password))
-		fmt.Printf("%x\n", hashbytes)
 
 		hash := hex.EncodeToString(hashbytes[:])
 

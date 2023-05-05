@@ -12,6 +12,12 @@ import (
 )
 
 func HandleAdminLinkNewGet(c *fiber.Ctx) error {
+	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
+		c.Location("/admin/")
+		c.Status(fiber.StatusSeeOther)
+		return nil
+	}
+
 	return c.Render("add_link", nil)
 }
 

@@ -36,7 +36,7 @@
     </ul>
   </nav>
   <main class="container" style="padding: 0">
-    <form action="javascript:HandleSubmit();" style="margin: 0">
+    <form action="javascript:HandleLinkAddSubmit();" style="margin: 0">
       <fieldset id="form_fields">
         <hgroup>
           <h1>Add new shortlink</h1>
@@ -46,7 +46,7 @@
         <input type="text" name="linkname" id="linkname" placeholder="shortlink">
 
         <label for="link">Link <i style="color: red;">*</i></label>
-        <input type="text" name="link" id="link" placeholder="https://" onchange="HandleChange()">
+        <input type="text" name="link" id="link" placeholder="https://" onchange="HandleLinkFieldChange()">
 
         <label for="description">Description</label>
         <input type="text" name="description" id="description" placeholder="">
