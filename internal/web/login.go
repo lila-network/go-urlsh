@@ -41,7 +41,7 @@ func HandleAdminLoginPost(c *fiber.Ctx) error {
 		}
 
 		key := uuid.New().String()
-		dblogin := new(models.Login)
+		dblogin := new(models.Session)
 
 		cookie := new(fiber.Cookie)
 		cookie.Name = misc.CookieName

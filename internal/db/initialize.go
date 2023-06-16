@@ -25,7 +25,7 @@ func InitializeDB() error {
 		return fmt.Errorf("couldn't create database: [%w]", err)
 	}
 
-	_, err = models.DB.NewCreateTable().IfNotExists().Model((*models.Login)(nil)).Exec(context.Background())
+	_, err = models.DB.NewCreateTable().IfNotExists().Model((*models.Session)(nil)).Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("couldn't create database: [%w]", err)
 	}

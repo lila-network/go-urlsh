@@ -14,7 +14,7 @@ func IsCookieValid(val string) bool {
 		return false
 	}
 
-	count, err := models.DB.NewSelect().Model((*models.Login)(nil)).Where("cookie = ?", val).Count(context.Background())
+	count, err := models.DB.NewSelect().Model((*models.Session)(nil)).Where("cookie = ?", val).Count(context.Background())
 	if err != nil {
 		log.Printf("Error checking cookie validity for cookie %v\n", val)
 		return false

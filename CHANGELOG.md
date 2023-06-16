@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - added Changelog
 - Ability to change the url and description of shortlinks
+- /api/v1/users/me endpoint to get user details
+- Account page for user overview and later use
 
 ### Changed
 - License changed to MIT

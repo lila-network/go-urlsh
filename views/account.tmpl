@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Account - go-urlsh</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="stylesheet" href="/admin/pico.min.css">
+  <link rel="stylesheet" href="/admin/custom.css">
+  <script src="/admin/main.js" defer></script>
+  <style>
+    h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 30px;
+      }
+  </style>
+
+</head>
+
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li>
+        <a href="/admin/" class="contrast"><strong>go-urlsh</strong></a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="/admin/">Links</a>
+      </li>
+      <li>
+        <a href="/admin/apikeys/">API Keys</a>
+      </li>
+      <li>
+        <a href="javascript: void(0)" >Users (coming soon)</a>
+      </li>
+      <li>
+        <a href="javascript: Logout()" style="color: red;">Logout</a>
+      </li>
+    </ul>
+  </nav>
+  <main class="container" style="padding: 0">
+    <h1>Account</h1>
+    <h2>User Details</h2>
+
+    <p>Username: {{ .UserName }}</p>
+    <p>Created at: {{ .Created }}</p>
+
+    <h2>Security</h2>
+    <p>nothing here yet</p>
+    <dialog id="dialog-info">
+      <h2 id="dialog-heading"></h2>
+      <p id="dialog-text"></p>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+  </main>
+  {{template "partials/footer" .}}
+</body>
+
+</html>

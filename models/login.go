@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Login struct {
+type Session struct {
 	bun.BaseModel `bun:"table:logins"`
 	Cookie        string    `bun:"cookie,pk,type:uuid"`
 	UserName      string    `bun:"username,notnull"`
