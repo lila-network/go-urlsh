@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Docker image support for linux/ppc64le
 
+### Fixed
+- Login sessions now actually get cleaned up
+
 ## [0.1.2] - 2014-08-09
 
 ### Fixed

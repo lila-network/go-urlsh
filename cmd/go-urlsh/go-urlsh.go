@@ -14,6 +14,9 @@ func Run() error {
 		log.Fatalln(err)
 	}
 
+	go app.CleanupLogins()
+	go app.CleanupLoginsCronJob()
+
 	err = app.SetupFiber()
 	if err != nil {
 		return fmt.Errorf("couldn't start webserver: %v", err.Error())

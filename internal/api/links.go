@@ -111,7 +111,7 @@ func HandleLinkPut(c *fiber.Ctx) error {
 	dblink.URL = editlink.URL
 	dblink.Modified = time.Now()
 
-	_, err = models.DB.NewUpdate().Model(&dblink).Where("id = ?", id).Exec(context.Background())
+	_, err = models.DB.NewUpdate().Model(&dblink).WherePK().Exec(context.Background())
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error: "+err.Error())
 	}
