@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - added Changelog
+- Ability to change the url and description of shortlinks
 
 ### Changed
 - License changed to MIT
+
+### Removed
+- Docker image support for linux/ppc64le
 
 ## [0.1.2] - 2014-08-09
 

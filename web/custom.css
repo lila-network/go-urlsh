@@ -72,3 +72,7 @@ summary[role="link"].secondary:is([aria-current], :hover, :active, :focus) {
 body>footer {
     padding: 1rem 0;
 }
+
+input[readonly] {
+    color: gray;
+}

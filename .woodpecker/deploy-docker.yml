@@ -1,12 +1,12 @@
-pipeline:
+steps:
   docker-deploy-push:
     when:
-      event:
-        - push
+      - event: push
+        branch: main
     image: woodpeckerci/plugin-docker-buildx
     settings:
       dockerfile: Dockerfile
-      platforms: linux/arm/v7,linux/arm64/v8,linux/amd64,linux/ppc64le
+      platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
       repo: codeberg.org/lauralani/go-urlsh
       registry: codeberg.org
       tags: latest
@@ -21,7 +21,7 @@ pipeline:
     image: woodpeckerci/plugin-docker-buildx
     settings:
       dockerfile: Dockerfile
-      platforms: linux/arm/v7,linux/arm64/v8,linux/amd64,linux/ppc64le
+      platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
       repo: codeberg.org/lauralani/go-urlsh
       registry: codeberg.org
       auto_tag: true

@@ -21,21 +21,52 @@ async function HandleLinkIndexCopy(id) {
 // Link Add
 
 async function HandleLinkAddSubmit() {
+    await LinkAction("add")
+}
+
+// Link edit
+
+async function HandleLinkEditSubmit() {
+    await LinkAction("edit")
+}
+
+async function LinkAction(action){
     document.getElementById("submit").active = false
     let slug = document.getElementById("linkname").value
     let url = document.getElementById("link").value
     let description = document.getElementById("description").value
-    let body = {
-        "id" : slug,
-        "url" : url,
-        "description" : description
+
+    let method, endpoint = ""
+    let body;
+    switch(action) {
+        case "add":
+            method = "POST"
+            endpoint = "/api/v1/links/"
+            body = {
+                "id" : slug,
+                "url" : url,
+                "description" : description
+            }
+            break;
+        case "edit":
+            method = "PUT"
+            endpoint = "/api/v1/links/" + slug
+            body = {
+                "url" : url,
+                "description" : description
+            }
+            break;
+        default:
+            return
     }
 
-    let response = await fetch("/api/v1/links", {
+
+
+    let response = await fetch(endpoint, {
         credentials: "include",
         body: JSON.stringify(body),
         mode: "same-origin",
-        method: "POST"
+        method: method
     });
 
     if (!response.ok) {

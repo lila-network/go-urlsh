@@ -5,6 +5,7 @@ import (
 	"codeberg.org/lauralani/go-urlsh/internal/misc"
 	"codeberg.org/lauralani/go-urlsh/models"
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -35,7 +36,7 @@ func HandleLinkGetAll(c *fiber.Ctx) error {
 }
 
 func HandleLinkGet(c *fiber.Ctx) error {
-	return nil
+	return fiber.NewError(fiber.StatusNotImplemented, "501 Not Implemented")
 }
 
 func HandleLinkPost(c *fiber.Ctx) error {
@@ -77,6 +78,47 @@ func HandleLinkPost(c *fiber.Ctx) error {
 }
 
 func HandleLinkPut(c *fiber.Ctx) error {
+	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
+		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
+	}
+
+	var dblink models.Link
+	var editlink models.Link
+
+	id := c.Params("id")
+	if id == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request")
+	}
+
+	err := models.DB.NewSelect().Model(&dblink).Where("id = ?", id).Scan(context.Background())
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("[HandleAdminLinkEditGet] Shortlink %v not found\n", id)
+			return fiber.NewError(fiber.StatusNotFound, "404 Not Found")
+		} else {
+			log.Printf("[HandleAdminLinkEditGet] Error querying Shortlink %v from database: %v\n", id, err)
+			return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
+		}
+	}
+
+	err = json.Unmarshal(c.Body(), &editlink)
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request: "+err.Error())
+	}
+
+	dblink.Description = editlink.Description
+	dblink.URL = editlink.URL
+	dblink.Modified = time.Now()
+
+	_, err = models.DB.NewUpdate().Model(&dblink).Where("id = ?", id).Exec(context.Background())
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error: "+err.Error())
+	}
+
+	c.Append("Location", c.BaseURL()+"/api/v1/links/"+editlink.ID)
+	c.Status(fiber.StatusNoContent)
+
 	return nil
 }
 
