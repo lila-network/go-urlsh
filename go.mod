@@ -7,7 +7,7 @@ require (
 	github.com/gofiber/template v1.8.3
 	github.com/google/uuid v1.6.0
 	github.com/jasonlvhit/gocron v0.0.1
-	github.com/uptrace/bun v1.1.14
+	github.com/uptrace/bun v1.2.11
 	github.com/uptrace/bun/dialect/pgdialect v1.2.11
 	github.com/uptrace/bun/driver/pgdriver v1.2.11
 )
