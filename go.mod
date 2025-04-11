@@ -3,7 +3,7 @@ module codeberg.org/lauralani/go-urlsh
 go 1.20
 
 require (
-	github.com/gofiber/fiber/v2 v2.46.0
+	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/gofiber/template v1.8.3
 	github.com/google/uuid v1.3.0
 	github.com/jasonlvhit/gocron v0.0.1
