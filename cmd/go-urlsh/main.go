@@ -1,11 +1,19 @@
-package app
+package main
 
 import (
-	"codeberg.org/lauralani/go-urlsh/internal/app"
-	"codeberg.org/lauralani/go-urlsh/internal/db"
 	"fmt"
 	"log"
+
+	"codeberg.org/lauralani/go-urlsh/internal/app"
+	"codeberg.org/lauralani/go-urlsh/internal/db"
 )
+
+func main() {
+	err := Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func Run() error {
 

@@ -1,6 +1,8 @@
 package app
 
 import (
+	"os"
+
 	"codeberg.org/lauralani/go-urlsh/internal/api"
 	"codeberg.org/lauralani/go-urlsh/internal/web"
 	"github.com/gofiber/fiber/v2"
@@ -9,8 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/gofiber/template/html"
-	"os"
+	"github.com/gofiber/template/html/v2"
 )
 
 func SetupFiber() error {
