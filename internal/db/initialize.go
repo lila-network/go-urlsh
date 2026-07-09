@@ -1,7 +1,7 @@
 package db
 
 import (
-	"codeberg.org/lauralani/go-urlsh/models"
+	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"database/sql"
 	"fmt"

@@ -1,9 +1,9 @@
 package web
 
 import (
-	"codeberg.org/lauralani/go-urlsh/internal/db"
-	"codeberg.org/lauralani/go-urlsh/internal/misc"
-	"codeberg.org/lauralani/go-urlsh/models"
+	"github.com/lila-network/go-urlsh/internal/db"
+	"github.com/lila-network/go-urlsh/internal/misc"
+	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"database/sql"
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +18,7 @@ func HandleRootGet(c *fiber.Ctx) error {
 			return nil
 		} else {
 			err := c.SendString("This is the index page of go-urlsh.\n " +
-				"See https://codeberg.org/lauralani/go-urlsh for more info.")
+				"See https://github.com/lila-network/go-urlsh for more info.")
 			if err != nil {
 				log.Println(err)
 				return err

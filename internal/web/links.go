@@ -1,9 +1,9 @@
 package web
 
 import (
-	"codeberg.org/lauralani/go-urlsh/internal/db"
-	"codeberg.org/lauralani/go-urlsh/internal/misc"
-	"codeberg.org/lauralani/go-urlsh/models"
+	"github.com/lila-network/go-urlsh/internal/db"
+	"github.com/lila-network/go-urlsh/internal/misc"
+	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"database/sql"
 	"fmt"

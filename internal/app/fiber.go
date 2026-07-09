@@ -3,8 +3,8 @@ package app
 import (
 	"os"
 
-	"codeberg.org/lauralani/go-urlsh/internal/api"
-	"codeberg.org/lauralani/go-urlsh/internal/web"
+	"github.com/lila-network/go-urlsh/internal/api"
+	"github.com/lila-network/go-urlsh/internal/web"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"

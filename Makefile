@@ -1,5 +1,5 @@
 # Set the default Go build flags
-GOFLAGS = -ldflags='-w -s -X codeberg.org/lauralani/go-urlsh/misc/constants.Version=$(VERSION)'
+GOFLAGS = -ldflags='-w -s -X github.com/lila-network/go-urlsh/misc/constants.Version=$(VERSION)'
 
 PROJECT=go-urlsh
 

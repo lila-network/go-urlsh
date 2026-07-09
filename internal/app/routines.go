@@ -1,7 +1,7 @@
 package app
 
 import (
-	"codeberg.org/lauralani/go-urlsh/models"
+	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"github.com/jasonlvhit/gocron"
 	"log"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"codeberg.org/lauralani/go-urlsh/internal/app"
-	"codeberg.org/lauralani/go-urlsh/internal/db"
+	"github.com/lila-network/go-urlsh/internal/app"
+	"github.com/lila-network/go-urlsh/internal/db"
 )
 
 func main() {

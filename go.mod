@@ -1,4 +1,4 @@
-module codeberg.org/lauralani/go-urlsh
+module github.com/lila-network/go-urlsh
 
 go 1.24.0
 
