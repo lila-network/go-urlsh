@@ -1,34 +1,24 @@
 package web
 
 import (
-	"github.com/lila-network/go-urlsh/internal/db"
-	"github.com/lila-network/go-urlsh/internal/misc"
-	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"log"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/lila-network/go-urlsh/internal/links"
+	"github.com/lila-network/go-urlsh/models"
 )
 
-func HandleAdminLinkNewGet(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
-		c.Location("/admin/")
-		c.Status(fiber.StatusSeeOther)
-		return nil
-	}
+func HandleAdminLinkNewGet(c fiber.Ctx) error {
 
 	return c.Render("add_link", nil)
 }
 
-func HandleAdminLinkEditGet(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
-		c.Location("/admin/")
-		c.Status(fiber.StatusSeeOther)
-		return nil
-	}
+func HandleAdminLinkEditGet(c fiber.Ctx) error {
 
-	var link = new(models.Link)
+	var link = new(links.Link)
 	var id = c.Params("id", "")
 
 	if id == "" {
@@ -51,18 +41,12 @@ func HandleAdminLinkEditGet(c *fiber.Ctx) error {
 	return c.Render("edit_link", link)
 }
 
-func HandleAdminLinkIndexGet(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
-		c.Location("/admin/login")
-		c.Status(fiber.StatusSeeOther)
-		return nil
-	} else {
-		var links []models.Link
+func HandleAdminLinkIndexGet(c fiber.Ctx) error {
+	var links []links.Link
 
-		err := models.DB.NewSelect().Model(&links).Scan(context.Background())
-		if err != nil {
-			return fmt.Errorf("error querying links: %v", err.Error())
-		}
-		return c.Render("links", links)
+	err := models.DB.NewSelect().Model(&links).Scan(context.Background())
+	if err != nil {
+		return fmt.Errorf("error querying links: %v", err.Error())
 	}
+	return c.Render("links", links)
 }

@@ -1,23 +1,23 @@
 package web
 
 import (
-	"github.com/lila-network/go-urlsh/internal/db"
-	"github.com/lila-network/go-urlsh/internal/misc"
-	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"log"
 	"time"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
+	"github.com/lila-network/go-urlsh/internal/misc"
+	"github.com/lila-network/go-urlsh/models"
 )
 
-func HandleAdminLoginPost(c *fiber.Ctx) error {
+func HandleAdminLoginPost(c fiber.Ctx) error {
 	var login models.LoginRequest
 	var user models.User
 
-	if err := c.BodyParser(&login); err != nil {
+	if err := c.Bind().Body(&login); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request")
 	}
 
@@ -74,12 +74,6 @@ func HandleAdminLoginPost(c *fiber.Ctx) error {
 	}
 }
 
-func HandleAdminLoginGet(c *fiber.Ctx) error {
-	if db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
-		c.Location("/admin/")
-		c.Status(fiber.StatusSeeOther)
-		return nil
-	} else {
-		return c.Render("login", nil)
-	}
+func HandleAdminLoginGet(c fiber.Ctx) error {
+	return c.Render("login", nil)
 }

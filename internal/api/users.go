@@ -1,20 +1,20 @@
 package api
 
 import (
-	"github.com/lila-network/go-urlsh/internal/db"
-	"github.com/lila-network/go-urlsh/internal/misc"
-	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"time"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/lila-network/go-urlsh/internal/misc"
+	"github.com/lila-network/go-urlsh/models"
 )
 
-func HandleUserPost(c *fiber.Ctx) error {
+func HandleUserPost(c fiber.Ctx) error {
 	var newuser models.LoginRequest
 
 	err := json.Unmarshal(c.Body(), &newuser)
@@ -61,10 +61,7 @@ func HandleUserPost(c *fiber.Ctx) error {
 	}
 }
 
-func HandleUserMe(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
-		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
-	}
+func HandleUserMe(c fiber.Ctx) error {
 
 	cookie := c.Cookies(misc.CookieName, "")
 	apikey := c.GetRespHeader("x-api-key", "")

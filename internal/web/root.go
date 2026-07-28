@@ -1,33 +1,28 @@
 package web
 
 import (
-	"github.com/lila-network/go-urlsh/internal/db"
-	"github.com/lila-network/go-urlsh/internal/misc"
-	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"database/sql"
-	"github.com/gofiber/fiber/v2"
 	"log"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/lila-network/go-urlsh/internal/links"
+	"github.com/lila-network/go-urlsh/models"
 )
 
-func HandleRootGet(c *fiber.Ctx) error {
+func HandleRootGet(c fiber.Ctx) error {
 	if c.Params("id", "") == "" {
-		if db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
-			c.Location("/admin/")
-			c.Status(fiber.StatusSeeOther)
-			return nil
-		} else {
-			err := c.SendString("This is the index page of go-urlsh.\n " +
-				"See https://github.com/lila-network/go-urlsh for more info.")
-			if err != nil {
-				log.Println(err)
-				return err
-			}
-			c.Status(fiber.StatusOK)
-			return nil
+		err := c.SendString("This is the index page of go-urlsh.\n " +
+			"See https://github.com/lila-network/go-urlsh for more info.")
+		if err != nil {
+			log.Println(err)
+			return err
 		}
+		c.Status(fiber.StatusOK)
+		return nil
+
 	} else {
-		link := new(models.Link)
+		link := new(links.Link)
 
 		err := models.DB.NewSelect().Model(link).Where("id = ?", c.Params("id")).Scan(context.Background())
 		if err != nil {

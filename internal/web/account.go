@@ -1,21 +1,16 @@
 package web
 
 import (
-	"github.com/lila-network/go-urlsh/internal/db"
-	"github.com/lila-network/go-urlsh/internal/misc"
-	"github.com/lila-network/go-urlsh/models"
 	"context"
 	"database/sql"
-	"github.com/gofiber/fiber/v2"
 	"log"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/lila-network/go-urlsh/internal/misc"
+	"github.com/lila-network/go-urlsh/models"
 )
 
-func HandleAdminAccountGet(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) {
-		c.Location("/admin/")
-		c.Status(fiber.StatusSeeOther)
-		return nil
-	}
+func HandleAdminAccountGet(c fiber.Ctx) error {
 
 	cookie := c.Cookies(misc.CookieName, "")
 	var session models.Session
