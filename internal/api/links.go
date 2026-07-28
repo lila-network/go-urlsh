@@ -1,155 +1,161 @@
 package api
 
 import (
-	"github.com/lila-network/go-urlsh/internal/db"
-	"github.com/lila-network/go-urlsh/internal/misc"
-	"github.com/lila-network/go-urlsh/models"
-	"context"
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"log"
-	"time"
+	"errors"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/lila-network/go-urlsh/internal/fault"
+	"github.com/lila-network/go-urlsh/internal/links"
 )
 
-func HandleLinkGetAll(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
-		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
-	}
-
-	var links []models.Link
-
-	err := models.DB.NewSelect().Model(&links).Scan(context.Background())
-	if err != nil {
-		return fmt.Errorf("error querying links: %v", err.Error())
-	}
-
-	for _, link := range links {
-		log.Printf("id: %v, url: %v", link.ID, link.URL)
-	}
-	err = c.JSON(links)
-	if err != nil {
-		log.Println(err)
-	}
-	return nil
+type CreateLinkRequest struct {
+	ID          string `json:"id"`
+	URL         string `json:"url"`
+	Description string `json:"description"`
 }
 
-func HandleLinkGet(c *fiber.Ctx) error {
-	return fiber.NewError(fiber.StatusNotImplemented, "501 Not Implemented")
+type UpdateLinkRequest struct {
+	URL         *string `json:"url"`
+	Description *string `json:"description"`
 }
 
-func HandleLinkPost(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
-		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
-	}
-
-	var newlink models.Link
-
-	err := json.Unmarshal(c.Body(), &newlink)
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request: "+err.Error())
-	}
-
-	// TODO: check if ID is already taken when ID is given
-
-	if newlink.ID == "" {
-		newlink.ID = misc.RandomString(6)
-	}
-
-	now := time.Now()
-	newlink.Created = now
-	newlink.Modified = now
-
-	_, err = models.DB.NewInsert().Model(&newlink).Exec(context.Background())
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error: "+err.Error())
-	}
-
-	c.Append("Location", c.BaseURL()+"/api/v1/links/"+newlink.ID)
-	c.Status(fiber.StatusCreated)
-
-	err = c.JSON(newlink)
-	if err != nil {
-		log.Println(err)
-	}
-
-	return nil
+type LinkHandler struct {
+	repository links.Repository
 }
 
-func HandleLinkPut(c *fiber.Ctx) error {
-	if !db.IsCookieValid(c.Cookies(misc.CookieName, "")) && !db.IsApiKeyValid(c.GetRespHeader("x-api-key", "")) {
-		return fiber.NewError(fiber.StatusUnauthorized, "401 Unauthorized")
-	}
+func NewLinkHandler(repository links.Repository) *LinkHandler {
+	return &LinkHandler{repository: repository}
+}
 
-	var dblink models.Link
-	var editlink models.Link
+func (l *LinkHandler) GetAll(c fiber.Ctx) error {
+	ctx := c.Context()
 
-	id := c.Params("id")
-	if id == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request")
-	}
-
-	err := models.DB.NewSelect().Model(&dblink).Where("id = ?", id).Scan(context.Background())
-
+	dbLinks, err := l.repository.GetAll(ctx)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			log.Printf("[HandleAdminLinkEditGet] Shortlink %v not found\n", id)
-			return fiber.NewError(fiber.StatusNotFound, "404 Not Found")
-		} else {
-			log.Printf("[HandleAdminLinkEditGet] Error querying Shortlink %v from database: %v\n", id, err)
-			return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
+		if errors.Is(err, fault.ErrNotFound) {
+			return WriteSuccess(c, fiber.StatusOK, []links.Link{})
 		}
+
+		return WriteError(c, fiber.StatusInternalServerError, "Internal Server Error")
+
 	}
 
-	err = json.Unmarshal(c.Body(), &editlink)
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request: "+err.Error())
-	}
-
-	dblink.Description = editlink.Description
-	dblink.URL = editlink.URL
-	dblink.Modified = time.Now()
-
-	_, err = models.DB.NewUpdate().Model(&dblink).WherePK().Exec(context.Background())
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error: "+err.Error())
-	}
-
-	c.Append("Location", c.BaseURL()+"/api/v1/links/"+editlink.ID)
-	c.Status(fiber.StatusNoContent)
-
-	return nil
+	return WriteSuccess(c, fiber.StatusOK, dbLinks)
 }
 
-func HandleLinkDelete(c *fiber.Ctx) error {
+func (l *LinkHandler) Get(c fiber.Ctx) error {
+	ctx := c.Context()
+
+	id := c.Params("id")
+	if id == "" {
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
+	}
+
+	link, err := l.repository.GetByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, fault.ErrNotFound) {
+			return WriteError(c, fiber.StatusNotFound, "Link not found")
+		}
+		return WriteError(c, fiber.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return WriteSuccess(c, fiber.StatusOK, link)
+}
+
+func (l *LinkHandler) Post(c fiber.Ctx) error {
+	ctx := c.Context()
+	var linkRequest CreateLinkRequest
+
+	err := c.Bind().Body(&linkRequest)
+	if err != nil {
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
+	}
+
+	link := links.Link{}
+	link.ID = linkRequest.ID
+	link.URL = linkRequest.URL
+	link.Description = linkRequest.Description
+
+	if !link.IsValid() {
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
+	}
+
+	dbLink, err := l.repository.Create(ctx, link)
+	if err != nil {
+		if errors.Is(err, fault.ErrAlreadyExists) {
+			return WriteError(c, fiber.StatusConflict, "A duplicate link already exists")
+		}
+
+		return WriteError(c, fiber.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return WriteSuccess(c, fiber.StatusCreated, dbLink)
+}
+
+func (l *LinkHandler) Patch(c fiber.Ctx) error {
+	ctx := c.Context()
+
+	id := c.Params("id")
+	if id == "" {
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
+	}
+
+	var requestBody UpdateLinkRequest
+
+	err := c.Bind().Body(&requestBody)
+	if err != nil {
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
+	}
+
+	dbLink, err := l.repository.GetByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, fault.ErrNotFound) {
+			return WriteError(c, fiber.StatusNotFound, "Link not found")
+		}
+
+		return WriteError(c, fiber.StatusInternalServerError, "Internal Server Error")
+	}
+
+	if requestBody.Description != nil {
+		dbLink.Description = *requestBody.Description
+	}
+
+	if requestBody.URL != nil {
+		dbLink.URL = *requestBody.URL
+	}
+
+	if !dbLink.IsValid() {
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
+	}
+
+	updatedDBLink, err := l.repository.Update(ctx, dbLink)
+	if err != nil {
+		if errors.Is(err, fault.ErrNotFound) {
+			return WriteError(c, fiber.StatusNotFound, "Link not found")
+		}
+
+		return WriteError(c, fiber.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return WriteSuccess(c, fiber.StatusOK, updatedDBLink)
+}
+
+func (l *LinkHandler) Delete(c fiber.Ctx) error {
+	ctx := c.Context()
 	id := c.Params("id")
 
 	if id == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "400 Bad Request")
+		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
 	}
 
-	numrows, err := models.DB.NewSelect().Model((*models.Link)(nil)).Where("id = ?", id).Count(context.Background())
+	err := l.repository.DeleteByID(ctx, id)
 	if err != nil {
-		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
+		if errors.Is(err, fault.ErrNotFound) {
+			return WriteError(c, fiber.StatusNotFound, "Link not found")
+		}
+
+		return WriteError(c, fiber.StatusInternalServerError, "Internal Server Error")
 	}
 
-	if numrows < 1 {
-		return fiber.NewError(fiber.StatusNotFound, "404 Not Found")
-	}
-
-	_, err = models.DB.NewDelete().Model((*models.Link)(nil)).Where("id = ?", id).Exec(context.Background())
-	if err != nil {
-		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusInternalServerError, "500 Internal Server Error")
-	}
-
-	c.Status(fiber.StatusNoContent)
-	err = c.SendString("204 No Content")
-	if err != nil {
-		log.Println(err)
-	}
-
-	return nil
+	return WriteNoContent(c)
 }

@@ -32,3 +32,26 @@ tasks:
     desc: Run Go tests
     cmds:
       - go test ./...
+
+  pack:
+    desc: Pack the project into a single .tar
+    vars:
+      PACK_FILE: "../go-urlsh.tar"
+    cmds:
+      - rm -f {{.PACK_FILE}}
+      - tar -rf {{.PACK_FILE}} .dockerignore
+      - tar -rf {{.PACK_FILE}} CHANGELOG.md
+      - tar -rf {{.PACK_FILE}} cmd/
+      - tar -rf {{.PACK_FILE}} Dockerfile
+      - tar -rf {{.PACK_FILE}} examples/
+      - tar -rf {{.PACK_FILE}} go.mod
+      - tar -rf {{.PACK_FILE}} go.sum
+      - tar -rf {{.PACK_FILE}} internal/
+      - tar -rf {{.PACK_FILE}} LICENSE
+      - tar -rf {{.PACK_FILE}} Makefile
+      - tar -rf {{.PACK_FILE}} models/
+      - tar -rf {{.PACK_FILE}} README.md
+      - tar -rf {{.PACK_FILE}} renovate.json
+      - tar -rf {{.PACK_FILE}} taskfile.yaml
+      - tar -rf {{.PACK_FILE}} views/
+      - tar -rf {{.PACK_FILE}} web/

@@ -17,7 +17,7 @@ func main() {
 
 func Run() error {
 
-	err := db.InitializeDB()
+	database, err := db.InitializeDB()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -25,7 +25,7 @@ func Run() error {
 	go app.CleanupLogins()
 	go app.CleanupLoginsCronJob()
 
-	err = app.SetupFiber()
+	err = app.SetupFiber(database)
 	if err != nil {
 		return fmt.Errorf("couldn't start webserver: %v", err.Error())
 	}
