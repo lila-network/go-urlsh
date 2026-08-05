@@ -1,0 +1,27 @@
+@if (message()) {
+  <div
+    class="alert"
+    [class.alert-danger]="type() === 'error'"
+    [class.alert-success]="type() === 'success'"
+    [class.alert-warning]="type() === 'warning'"
+    [class.alert-info]="type() === 'info'"
+    role="alert">
+    <div class="alert-content d-flex align-items-center">
+      @switch (type()) {
+        @case ('success') {
+          <svg lucideCircleAlert class="flex-shrink-0"></svg>
+        }
+        @case ('error') {
+          <svg lucideCircleCheck class="flex-shrink-0"></svg>
+        }
+        @case ('warning') {
+          <svg lucideCircleAlert class="flex-shrink-0"></svg>
+        }
+        @case ('info') {
+          <svg lucideInfo class="flex-shrink-0"></svg>
+        }
+      }
+      <span class="ms-2">{{ message() }}</span>
+    </div>
+  </div>
+}

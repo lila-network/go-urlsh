@@ -15,7 +15,12 @@ import (
 
 // InitializeDB initializes the database connection, sets up tables, and applies schema migrations for the application.
 func InitializeDB() (*bun.DB, error) {
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(os.Getenv("DATABASE_URL"))))
+	dsn := os.Getenv("DATABASE_URL")
+	if dsn == "" {
+		return nil, fmt.Errorf("DATABASE_URL environment variable is not set")
+	}
+
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	models.DB = bun.NewDB(sqldb, pgdialect.New())
 
 	_, err := models.DB.NewCreateTable().IfNotExists().Model((*links.Link)(nil)).Exec(context.Background())

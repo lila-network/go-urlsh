@@ -1,0 +1,74 @@
+# Store pnpm project settings here.
+# Keep registry tokens and other secrets out of this file.
+
+# Save exact versions when adding dependencies.
+saveExact: true
+
+# Avoid accidental root installs.
+ignoreWorkspaceRootCheck: false
+
+# Wait before accepting newly published versions.
+# 1440 = 1 day.
+# 10080 = 7 days.
+# A 7-day delay is conservative and reduces exposure to fresh malicious releases.
+minimumReleaseAge: 10080
+
+# Keep installs practical for already resolved lockfile entries.
+minimumReleaseAgeStrict: false
+
+# Allow specific trusted or emergency packages to bypass the release-age delay.
+# Keep this list short and review every entry.
+minimumReleaseAgeExclude:
+  - "@types/*"
+  - '@angular-devkit/architect@0.2200.8'
+  - '@angular-devkit/core@22.0.8'
+  - '@angular-devkit/schematics@22.0.8'
+  - '@angular/build@22.0.8'
+  - '@angular/cli@22.0.8'
+  - '@schematics/angular@22.0.8'
+  # Example emergency bypass:
+  # - "some-vulnerable-package@1.2.3"
+
+  # Fail if dependency trust evidence downgrades compared to earlier releases.
+trustPolicy: no-downgrade
+
+trustPolicyExclude:
+  - 'semver@6.3.1'
+  - 'chokidar@4.0.3'
+
+# Block exotic protocols in transitive dependencies.
+# This reduces exposure to git URLs, direct tarballs, and similar risky sources.
+blockExoticSubdeps: true
+
+# Fail on unapproved dependency build scripts.
+strictDepBuilds: true
+
+# Explicitly allow or deny install scripts.
+# Start restrictive and add entries only after review.
+allowBuilds:
+  esbuild: true
+  "@parcel/watcher": true
+  core-js: false
+  core-js-pure: false
+  fsevents: false
+  lmdb: false
+  msgpackr-extract: false
+
+# Prefer local workspace packages when possible.
+preferWorkspacePackages: true
+
+# Link workspace packages.
+# Use workspace:* ranges for internal packages.
+linkWorkspacePackages: true
+
+# Keep dependency layout strict.
+shamefullyHoist: false
+
+# Avoid public hoisting unless a legacy tool requires it.
+publicHoistPattern: []
+
+# Verify dependencies before running scripts.
+verifyDepsBeforeRun: install
+
+# Audit policy.
+auditLevel: high

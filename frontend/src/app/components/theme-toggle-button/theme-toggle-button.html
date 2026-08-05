@@ -1,0 +1,11 @@
+<button
+  type="button"
+  class="btn border-0 rounded-circle d-inline-flex align-items-center justify-content-center p-0 text-body theme-toggle-button"
+  (click)="toggleTheme()">
+
+  @if (themeService.theme() === 'light') {
+    <svg lucideMoonStar></svg>
+  } @else {
+    <svg lucideSun></svg>
+  }
+</button>

@@ -76,10 +76,6 @@ func (l *LinkHandler) Post(c fiber.Ctx) error {
 	link.URL = linkRequest.URL
 	link.Description = linkRequest.Description
 
-	if !link.IsValid() {
-		return WriteError(c, fiber.StatusBadRequest, "Request is invalid")
-	}
-
 	dbLink, err := l.repository.Create(ctx, link)
 	if err != nil {
 		if errors.Is(err, fault.ErrAlreadyExists) {

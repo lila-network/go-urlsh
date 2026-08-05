@@ -1,0 +1,44 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/links">Shortlinks</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ linkId() }}</li>
+  </ol>
+</nav>
+
+<alert-message [message]="errorMessage()" type="error"></alert-message>
+
+
+@if (link(); as currentLink) {
+  <div class="card border-danger">
+    <div class="card-header text-bg-danger h1">
+      Delete Shortlink
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title">
+        Do you really want to delete this shortlink?
+      </h5>
+
+      <dl>
+        <dt>Slug</dt>
+        <dd>{{ currentLink.data.id }}</dd>
+
+        <dt>Target</dt>
+        <dd><a [href]="currentLink.data.url">{{ currentLink.data.url }}</a></dd>
+
+        <dt>Description</dt>
+        <dd>{{ currentLink.data.description }}</dd>
+      </dl>
+
+      <a class="btn btn-secondary" (click)="cancelClicked()">Cancel</a>
+      <button class="btn btn-danger ms-2">
+        <div class="d-flex align-items-center">
+          <svg lucideTrash2></svg>
+          <span class="ms-2">Delete</span>
+        </div>
+      </button>
+    </div>
+  </div>
+} @else {
+  <p>Loading...</p>
+}

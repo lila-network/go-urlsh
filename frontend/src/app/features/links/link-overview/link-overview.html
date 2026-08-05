@@ -1,0 +1,89 @@
+<div class="d-flex align-items-center justify-content-between">
+  <h1>Shortlinks</h1>
+  <div>
+  <button
+    type="button"
+    class="btn btn-outline-secondary flex-grow-0"
+    (click)="fetchLinks()">
+    <div class="d-flex align-items-center align-content-center justify-content-center">
+      <svg lucideRefreshCw class="me-2"></svg>
+      <span>Reload</span>
+    </div>
+  </button>
+
+    <a
+      role="button"
+      type="button"
+      class="btn btn-success flex-grow-0 ms-2"
+      [routerLink]="['/links/new']">
+      <div class="d-flex align-items-center align-content-center justify-content-center">
+        <svg lucidePlus class="me-2"></svg>
+        <span>New Shortlink</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="btn-group mb-4" role="group" aria-label="Basic example">
+  <button type="button" class="btn btn-secondary" (click)="setLoading()">SetLoading</button>
+  <button type="button" class="btn btn-secondary" (click)="setError()">SetErrorMessage</button>
+  <button type="button" class="btn btn-secondary" (click)="setEmpty()">SetEmpty</button>
+  <button type="button" class="btn btn-secondary" (click)="setContent()">SetContent</button>
+  <button type="button" class="btn btn-secondary" (click)="setClear()">Clear</button>
+</div>
+<alert-message [message]="errorMessage()" [type]="'error'"></alert-message>
+<alert-message [message]="successMessage()" [type]="'success'"></alert-message>
+
+<div class="table-responsive">
+  <table class="table table-hover table-striped">
+    <thead>
+    <tr>
+      <th scope="col">Slug</th>
+      <th scope="col">Points to</th>
+      <th scope="col">Description</th>
+      <th scope="col">Created at</th>
+      <th scope="col">Modified at</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      @if (loading()) {
+        <tr>
+          <td colspan="6" class="text-center py-4">
+            <div class="spinner-border text-secondary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-2 mb-0">Loading shortlinks...</p>
+          </td>
+        </tr>
+      } @else {
+        @for (link of links(); track link.id) {
+          <tr>
+            <th scope="row">{{ link.id }}</th>
+            <td><a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.url }}</a></td>
+            <td>{{ link.description }}</td>
+            <td>{{ link.created }}</td>
+            <td>{{ link.modified }}</td>
+            <td>
+              <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/links', link.id]">
+                <svg lucideSquarePen></svg>
+              </a>
+              <a class="btn btn-sm btn-outline-danger ms-2" [routerLink]="['/links', link.id, 'delete']">
+                <svg lucideTrash2></svg>
+              </a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="text-center py-4">
+              <div class="d-flex align-items-center align-content-center justify-content-center">
+                <svg lucideInfo></svg>
+                <span class="ms-2">No Shortlinks found</span>
+              </div>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

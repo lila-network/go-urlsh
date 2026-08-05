@@ -50,6 +50,12 @@ func SetupFiber(database *bun.DB) error {
 		Views: templateEngine,
 	})
 
+	fiberapp.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowMethods: []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
+	}))
+
 	fiberapp.Use(logger.New(logger.Config{Format: "[${ip}]:${port} ${status} ${method} ${path}\n"}))
 	fiberapp.Use(etag.New(etag.Config{Weak: false}))
 	fiberapp.Use(compress.New())
@@ -72,7 +78,6 @@ func SetupFiber(database *bun.DB) error {
 	fiberapp.Get("/:id", web.HandleRootGet)
 
 	v1 := fiberapp.Group("/api/v1")
-	v1.Use(cors.New(cors.Config{AllowOrigins: []string{"*"}}))
 	v1.Use(middlewareHandler.requireAuth)
 
 	//admin := fiberapp.Group("/admin")
