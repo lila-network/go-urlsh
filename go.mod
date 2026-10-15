@@ -1,12 +1,11 @@
 module github.com/lila-network/go-urlsh
 
-go 1.24.0
-
-toolchain go1.24.5
+go 1.26.0
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.14
 	github.com/gofiber/template/html/v2 v2.1.3
+	github.com/gofiber/template/html/v3 v3.0.11
 	github.com/google/uuid v1.6.0
 	github.com/jasonlvhit/gocron v0.0.1
 	github.com/uptrace/bun v1.2.18
@@ -35,6 +34,6 @@ require (
 	go.opentelemetry.io/otel v1.40.0 // indirect
 	go.opentelemetry.io/otel/trace v1.40.0 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 )
