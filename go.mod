@@ -2,7 +2,7 @@ module github.com/lila-network/go-urlsh
 
 go 1.24.0
 
-toolchain go1.24.5
+toolchain go1.27.3
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.14
